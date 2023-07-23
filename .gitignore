@@ -1,0 +1,22 @@
+# => NOTE | See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# => DESC | python
+**/__pycache__/
+/flet_components/**/__pycache__/
+**.egg-info
+
+# => DESC | visual code
+.vscode
+workflow.code-workspace
+
+# => DESC | misc
+*.bk
+.DS_Store
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.environment
+generate_docs.py
+generate_venv.py
