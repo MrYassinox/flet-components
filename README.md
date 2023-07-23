@@ -23,7 +23,7 @@
 ### Using
 > Create and activate a Python virtual environment.
 
-```bash
+```txt
 pip install -e git+https://github.com/MrYassinox/flet-components.git@main
 # or
 pip install https://github.com/MrYassinox/flet-components/archive/main.zip
@@ -33,7 +33,7 @@ pip install https://git+github.com/MrYassinox/flet-components.git@<branch_name o
 
 ### Using as a devlope
 > Cloning repository with `git clone` go to into your project directory where to clone repository.
-```bash
+```txt
 git clone https://github.com/MrYassinox/flet-components.git
 pip install -e . # go to inside project repository directory and run this command.
 ```
