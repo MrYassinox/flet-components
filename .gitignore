@@ -2,7 +2,7 @@
 
 # => DESC | python
 **/__pycache__/
-/flet_components/**/__pycache__/
+/**/**/__pycache__/
 **.egg-info
 
 # => DESC | visual code
