@@ -8,7 +8,7 @@ build-backend = "setuptools.build_meta"
 name = "portdev-flet-components"
 
 # DESC | The version of the package. Required
-version = "0.1.0"
+version = "0.1.1"
 
 # DESC | A short description of the package. Required
 description = "a components develop for the flet python framework and to easily customizable."

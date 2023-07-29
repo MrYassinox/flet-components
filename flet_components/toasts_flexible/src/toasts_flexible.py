@@ -20,10 +20,12 @@ import flet as ft
 from flet import UserControl, Control, Page
 from flet_core import ControlEvent, ContainerTapEvent
 from flet_core.shadow import BoxShadow
+from flet_core.animation import Animation, AnimationCurve
+from flet_core.transform import Offset, Scale, Rotate
 from flet_core.types import MainAxisAlignment, MaterialState
 
 # LIB => from libraryies
-from flet_components.core import OverlayPageManger, SetPosition, set_color_balance
+from flet_components.core import OverlayPageManger, SetPosition, Position, set_color_balance
 
 ########################################################################################################################
 # TODO SET UP
@@ -162,81 +164,119 @@ class ButtonIcon(UserControl):
 
         return self.builder
 
-class ToastPosition:
-    """The toast position attribute.
-
-    Attribute:
-        `TOP_CENTER`
-        `TOP_LEFT`
-        `TOP_RIGHT`
-        `BOTTOM_CENTER`
-        `BOTTOM_LEFT`
-        `BOTTOM_RIGHT`
-        `CENTER`
-        `CENTER_LEFT`
-        `CENTER_RIGHT`
-    """
-    TOP_CENTER = "top_center"
-    TOP_LEFT = "top_left"
-    TOP_RIGHT = "top_right"
-
-    BOTTOM_CENTER = "bottom_center"
-    BOTTOM_LEFT = "bottom_left"
-    BOTTOM_RIGHT = "bottom_right"
-
-    CENTER = "center"
-    CENTER_LEFT = "center_left"
-    CENTER_RIGHT = "center_right"
-
+# TODO UPADTE LAST 23:45 | 28-07-2023
 class ToastAction(UserControl):
     """ToastAction - Extended from UserControl class."""
-    def __init__(self, 
-        key: Optional[Any] = None,
+    def __init__(
+        self,
+        key: Optional[str] = None,
         data: Optional[Any] = None,
+        width: Optional[Union[int, float]] = None,
+        height: Optional[Union[int, float]] = None,
+        left: Optional[Union[int, float]] = None,
+        top: Optional[Union[int, float]] = None,
+        right: Optional[Union[int, float]] = None,
+        bottom: Optional[Union[int, float]] = None,
+        expand: Optional[Union[bool, int]] = None,
+        col: Optional[Union[Dict[str, Union[int, float]], int, float]] = None,
+        opacity: Optional[Union[int, float]] = None,
+        rotate: Optional[Union[int, float, Rotate]] = None,
+        scale: Optional[Union[int, float, Scale]] = None,
+        offset: Optional[Union[Offset, Tuple[Union[float, int], Union[float, int]]]] = None,
+        aspect_ratio: Optional[Union[int, float]] = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        animate_opacity: Optional[Union[bool, int, Animation]] = None,
+        animate_size: Optional[Union[bool, int, Animation]] = None,
+        animate_position: Optional[Union[bool, int, Animation]] = None,
+        animate_rotation: Optional[Union[bool, int, Animation]] = None,
+        animate_scale: Optional[Union[bool, int, Animation]] = None,
+        animate_offset: Optional[Union[bool, int, Animation]] = None,
+        on_animation_end: Optional[Any] = None,
+
         text: Optional[str] = None, 
-        width: Optional[Union[int, float]]= None, 
-        height: Optional[Union[int, float]] = None, 
+        action_style: Optional[Literal["elevated", "filled", "outlined", "texted"]] = None,
+        color: Union[None, str, Dict[Union[str, MaterialState], str]] = None,
+        bgcolor: Union[None, str, Dict[Union[str, MaterialState], str]] = None,
         url: Optional[str] = None, 
         url_target: Optional[str] = None, 
         on_hover: Callable[[ControlEvent], None] = None, 
         on_click: Callable[[ControlEvent], None] = None, 
         on_long_press: Callable[[ControlEvent], None] = None, 
-        disabled: Optional[bool] = None, 
-        color: Union[None, str, Dict[Union[str, MaterialState], str]] = None,
-        bgcolor: Union[None, str, Dict[Union[str, MaterialState], str]] = None,
-        action_style: Optional[Literal["elevated", "filled", "outlined", "texted"]] = None,
         ): # DESC => initialize constructor.
         """Initialize the ToastAction object.
 
         Args:
-            `key` (Any, optional): An optional key to uniquely identify the control. It can be used for custom indexing or identification purposes. Defaults to None.
+            `key` (str, optional): An optional key to uniquely identify the control. It can be used for custom indexing or identification purposes. Defaults to None.
             `data` (Any, optional): An optional data value associated with the control. This data can be used to store additional information related to the control. Defaults to None.
+            `width` (Union[int, float], optional): Imposed Control width in virtual pixels. Defaults to None.
+            `height` (Union[int, float], optional): Imposed Control height in virtual pixels. Defaults to None.
+            `left` (Union[int, float], optional): Effective inside Stack only. The distance that the child's left edge is inset from the left of the stack. Defaults to None.
+            `top` (Union[int, float], optional): Effective inside Stack only. The distance that the child's top edge is inset from the top of the stack. Defaults to None.
+            `right` (Union[int, float], optional): Effective inside Stack only. The distance that the child's right edge is inset from the right of the stack. Defaults to None.
+            `bottom` (Union[int, float], optional): Effective inside Stack only. The distance that the child's bottom edge is inset from the bottom of the stack. Defaults to None.
+            `expand` (Union[bool, int], optional): When a child Control is placed into a Column or Row you can "expand" it to fill the available space. expand property could be a boolean value (True - expand control to fill all available space) or an integer - an "expand factor" specifying how to divide a free space. Defaults to None.
+            `col` (Union[Dict[str, Union[int, float]], int, float], optional): Can be configured to have a different value for specific "breakpoints". Breakpoints are named dimension ranges. Defaults to None.
+            `opacity` (Union[int, float], optional): The opacity of the control transparent. 0.0 - is completely transparent. 1.0 a is fully painted without any transparency. Defaults to None.
+            `rotate` (Union[int, float, Rotate], optional): The rotation of the control a around the center. can set the properties in Rotate. Defaults to None.
+            `scale` (Union[int, float, Scale], optional): The Scale of the control along the 2D plane. Default scale is 1.0 - is not scaled. 0.5 - the is twice smaller, 2.0 - the is twice larger. Defaults to None.
+            `offset` (Union[Offset, Tuple[Union[float, int], Union[float, int]]], optional): The transform offset of the control. can set the properties in Offset. Defaults to None.
+            `aspect_ratio` (Union[int, float], optional): The ratio size of the control. Defaults to None.
+            `visible` (bool, optional): Setting visible to False completely prevents control (and all its children if any) to displayed. and they do not emit any events. Defaults to None.
+            `disabled` (bool, optional): A boolean flag that determines whether the control is disabled. If set to True, the control will be non-interactive. Defaults to None.
+            `animate_opacity` (Union[bool, int, Animation], optional): The Enables animation of the control. after that gradually changes its values can set the properties in Animation. Defaults to None.
+            `animate_size` (Union[bool, int, Animation], optional): The Enables animation of the control. after that gradually changes its values can set the properties in Animation. Defaults to None.
+            `animate_position` (Union[bool, int, Animation], optional): The Enables animation of the control. after that gradually changes its values can set the properties in Animation. Defaults to None.
+            `animate_rotation` (Union[bool, int, Animation], optional): The Enables animation of the control. after that gradually changes its values can set the properties in Animation. Defaults to None.
+            `animate_scale` (Union[bool, int, Animation], optional): The Enables animation of the control. after that gradually changes its values can set the properties in Animation. Defaults to None.
+            `animate_offset` (Union[bool, int, Animation], optional): The Enables animation of the control. after that gradually changes its values can set the properties in Animation. Defaults to None.
+            `on_animation_end` (Any, optional): A callback function that have which is called when animation complete. Defaults to None.
+            -----
             `text` (str, optional): The text or label to be displayed on the control. It represents the visible text on the button. Defaults to None.
-            `width` (Union[int, float], optional): The width of the control in pixels. If not provided, the width will be automatically determined based on the content. Defaults to None.
-            `height` (Union[int, float], optional): The height of the control in pixels. If not provided. Defaults to 28.
+            `action_style` (str, optional): The style of the button. It can be one of four options: "elevated", "filled", "outlined", or "texted". Defaults to `"texted"`.
+            `color` (Union[None, str, Dict[Union[str, MaterialState], str]]): The text color of the control. It can be specified as a color string or a dictionary containing mappings for different states {"": "red", "hovered": "blue", ft.MaterialState.FOCUSED: ft.colors.WHITE}. Defaults to None.
+            `bgcolor` (Union[None, str, Dict[Union[str, MaterialState], str]]): The background color of the control. It can be specified as a color string or a dictionary containing mappings for different states {"": "red", "hovered": "blue", ft.MaterialState.FOCUSED: ft.colors.WHITE}. Defaults to None.
             `url` (str, optional): An optional URL to be opened when the control is clicked. If set, on_click event is fired after that. Defaults to None.
             `url_target` (str, optional): An optional target attribute for the URL specified in url. It determines where the URL will be opened, such as "_blank" for a new tab or "_self" for the current tab. Defaults to None.
             `on_hover` (Callable[[ControlEvent], None], optional): A callback function that will be triggered when the mouse pointer hovers over the control. Defaults to None.
             `on_click` (Callable[[ControlEvent], None], optional): A callback function that will be triggered when the control is clicked. Defaults to None.
             `on_long_press` (Callable[[ControlEvent], None], optional): A callback function that will be triggered when the control is long-pressed. Defaults to None.
-            `disabled` (bool, optional): A boolean flag that determines whether the control is disabled. If set to True, the control will be non-interactive. Defaults to None.
-            `color` (Union[None, str, Dict[Union[str, MaterialState], str]]): The text color of the control. It can be specified as a color string or a dictionary containing mappings for different states {"": "red", "hovered": "blue", ft.MaterialState.FOCUSED: ft.colors.WHITE}. Defaults to None.
-            `bgcolor` (Union[None, str, Dict[Union[str, MaterialState], str]]): The background color of the control. It can be specified as a color string or a dictionary containing mappings for different states {"": "red", "hovered": "blue", ft.MaterialState.FOCUSED: ft.colors.WHITE}. Defaults to None.
-            `action_style` (str, optional): The style of the button. It can be one of four options: "elevated", "filled", "outlined", or "texted". Defaults to `"texted"`.
 
         Returns:
             Control:
         """
-        super().__init__()
+        super().__init__(
+            self,
+            key=key,
+            data=data,
+            width=width,
+            height=height if height else 28,
+            left=left,
+            top=top,
+            right=right,
+            bottom=bottom,
+            expand=expand,
+            col=col,
+            opacity=opacity,
+            rotate=rotate,
+            scale=scale,
+            offset=offset,
+            aspect_ratio=aspect_ratio,
+            animate_opacity=animate_opacity,
+            animate_size=animate_size,
+            animate_position=animate_position,
+            animate_rotation=animate_rotation,
+            animate_scale=animate_scale,
+            animate_offset=animate_offset,
+            on_animation_end=on_animation_end,
+            visible=visible,
+            # disabled=disabled,
+        )
         # DESC => Initialize the state variables attribute.
         self.action_style = action_style
 
         self.button_texted = ft.TextButton(
-            key=key,
-            data=data,
             text=text,
-            width=width,
-            height=height if height else 28,
             url=url,
             url_target=url_target,
             on_hover=on_hover,
@@ -251,11 +291,7 @@ class ToastAction(UserControl):
             )
         )
         self.button_filled = ft.FilledButton(
-            key=key,
-            data=data,
             text=text,
-            width=width,
-            height=height if height else 28,
             url=url,
             url_target=url_target,
             on_hover=on_hover,
@@ -270,18 +306,14 @@ class ToastAction(UserControl):
             )
         )
         self.button_elevated = ft.ElevatedButton(
-            key=key,
-            data=data,
             text=text,
-            width=width,
-            height=height if height else 28,
-            elevation=1,
             url=url,
             url_target=url_target,
             on_hover=on_hover,
             on_long_press=on_long_press,
             on_click=on_click,
             disabled=disabled,
+            elevation=1,
             style=ft.ButtonStyle(
                 color=color,
                 bgcolor=bgcolor,
@@ -290,11 +322,7 @@ class ToastAction(UserControl):
             )
         )
         self.button_outlined = ft.OutlinedButton(
-            key=key,
-            data=data,
             text=text,
-            width=width,
-            height=height if height else 28,
             url=url,
             url_target=url_target,
             on_hover=on_hover,
@@ -324,23 +352,28 @@ class ToastAction(UserControl):
             # DESC => default texted.
             return self.button_texted
 
+# TODO UPADTE LAST 23:45 | 28-07-2023
 class ToastsFlexible:
     """A class - ToastsFlexible"""
     def __init__(self,
         page: Page,
-        icon: ft.icons = None,
+        icon: Optional[Union[str, Control]] = None,
         title: Optional[Union[str, Control]] = None,
         desc: Optional[Union[str, Control]] = None,
-        bgcolor_title: ft.colors = None,
-        bgcolor_desc: ft.colors = None,
-        shadow: Optional[Union[BoxShadow, List[BoxShadow]]] = None,
+        bgcolor_title: Optional[str] = None,
+        bgcolor_desc: Optional[str] = None,
+        # shadow: Optional[Union[BoxShadow, List[BoxShadow]]] = None,
         no_live_time: bool = False,
-        position: Optional[ToastPosition] = ToastPosition.TOP_RIGHT,
-        actions: Optional[List[ToastAction]] = None,
+        position: Optional[Position] = Position.TOP_RIGHT,
+        position_spacing: Optional[int] = 40,
+        actions: Optional[Union[List[ToastAction], List[Control]]] = None,
         actions_alignment: Optional[MainAxisAlignment] = None,
         auto_close: Optional[Union[int, float]] = None,
-        width: Optional[Union[int, float]] = None,
+        width: Optional[Union[int, float]] = 350,
         trigger: Optional[Control] = None,
+
+        animate_duration: Optional[int] = 800,
+        animate_curve: Optional[AnimationCurve] = AnimationCurve.DECELERATE,
 
         set_history_title: Optional[str] = None,
         set_history_desc: Optional[str] = None,
@@ -354,26 +387,32 @@ class ToastsFlexible:
 
         Args:
             `page` (Page): The session start of the page container where the toast will be displayed. a for controls (widgets). It represents the user interface page where the toast will be shown.
-            `icon` (ft.icons, optional): The icon to be displayed on the toast. It is an optional argument that allows users to customize the icon shown with the toast message. Defaults to None.
-            `title` (Union[str, Control], optional): The title of the toast message. It can be either a string or a Control object. If a Control object is used, the toast's title will be dynamic and update as per the control's value Defaults to None.
+            `icon` (Union[str, Control], optional): The a icon to be displayed or a control custom that will, you can set string it icon or use a named from `flet.icons`. Defaults to None.
+            `title` (Union[str, Control], optional): The a text to be displayed or a control custom that will. Defaults to None.
             `desc` (Union[str, Control], optional): The description or main content of the toast message. It can be either a string or a Control object, enabling dynamic content display. Defaults to None.
-            `bgcolor_title` (ft.colors, optional): The background color of the toast title. This argument allows to customize the background color of the toast title section. Defaults to ft.colors.INVERSE_SURFACE.
-            `bgcolor_desc` (ft.colors, optional): The background color of the toast description. This argument allows to customize the background color of the toast description section. Defaults to ft.colors.ON_INVERSE_SURFACE.
-            `shadow` (Union[BoxShadow, List[BoxShadow]], optional):  The shadow customization for the toast. can set the shadow properties, to add a shadow effect to the toast. Defaults to None.
+            `bgcolor_title` (str, optional): The background color of the toast title. This allows to customize the background color of the toast title section a color value could be a hex (e.g. #CC0000) or a named color from `flet.colors`. Defaults to ft.colors.INVERSE_SURFACE.
+            `bgcolor_desc` (str, optional): The background color of the toast description. This allows to customize the background color of the toast description section a color value could be a hex (e.g. #CC0000) or a named color from `flet.colors`. Defaults to ft.colors.ON_INVERSE_SURFACE.
             `no_live_time` (bool): That determines whether to show live time text to the toast. If set to True, the toast will not display any time information. Defaults to False.
-            `position` (ToastPosition, optional): The position of the toast on the screen. It is an optional argument that allows to set the toast's position to one of the predefined positions, such as top-left etc. Defaults to ToastPosition.TOP_RIGHT.
-            `actions` (List[ToastAction], optional):  A list of action buttons to be added to the toast. can provide a list of `ToastAction` objects to create interactive buttons within the toast. Defaults to None.
+            `position` (Position, optional): The position of the toast on the screen. that allows to set the toast's position to one of the predefined positions, can set the properties in `Position`. Defaults to Position.TOP_LEFT.
+            `position_spacing` (int, optional): The spacing of the toast and page margin. Defaults to 40.
+            `actions` (Union[List[ToastAction], List[Control]], optional): A list of action buttons to be added to the toast. can provide a list of `ToastAction` objects or a control custom that to create interactive buttons within the toast. Defaults to None.
             `actions_alignment` (MainAxisAlignment, optional): The alignment of the action buttons within the toast. It is an optional argument that allows to set the alignment of the buttons, such as start, end, or center.
             `auto_close` (Union[int, float], optional): The time duration (in seconds) after which the toast will automatically close and disappear. If set to None, the toast will not auto-close. Defaults to None.
             `width` (Union[int, float], optional): The width of the toast in pixels. If not provided. Defaults to 350.
             `trigger` (Control, optional): An optional control that can be used to trigger the display of the toast. If a control with an `on_click` attribute is provided, the toast will be shown when the control is clicked. Defaults to None.
+            `animate_duration` (int, optional): The duration of animation in milliseconds to close toast. Defaults to 800.
+            `animate_curve` (AnimationCurve, optional): The curve of animation to close toast. Defaults to AnimationCurve.DECELERATE.
             `set_history_title` (str, optional): An optional title to set for the toast's history entry. This argument is used if use a control in `"title"`, or want to set a specific title for the history entry. Defaults to None.
-            `set_history_desc` (str, optional):  An optional description to set for the toast's history entry. This argument is used if use a control in `"desc"`, or want to set a specific description for the history entry. Defaults to None.
-            `set_history` (Dict, optional):  A dictionary to store the history of displayed toasts. If provided, the dictionary will be updated with the timestamp, title, description, and time ago when each toast is displayed. Defaults to None.
+            `set_history_desc` (str, optional): An optional description to set for the toast's history entry. This argument is used if use a control in `"desc"`, or want to set a specific description for the history entry. Defaults to None.
+            `set_history` (Dict, optional): A dictionary to store the history of displayed toasts. If provided, the dictionary will be updated with the timestamp, title, description, and time ago when each toast is displayed. Defaults to None.
             `interval_update` (Union[int, float], optional): The time interval (in seconds) between each update of the opening time of the toast. If set, the opening time will be refreshed at the specified interval. Defaults to 5.
             `interval_random` (bool, optional): A boolean flag that determines whether to set a random interval between each update. If set to True, the opening time will be refreshed at random intervals between updates. Defaults to False.
             `refresh_runs` (Union[int, float], optional): The time interval (in seconds) for an refresh loop run. If provided, the opening time will be refreshed continuously at the specified interval until the toast is closed or auto-closes, if use None or set param `auto_close` or set `no_live_time` True you will not update. Defaults to None.
 
+        Notes:
+            - removed:
+                - `shadow` (Union[BoxShadow, List[BoxShadow]], optional): The shadow customization for the toast. can set the shadow properties, to add a shadow effect to the toast. Defaults to None.
+        
         Example:
         ```python
             toasts_history = {}
@@ -631,20 +670,24 @@ class ToastsFlexible:
         """
         super().__init__()
         # DESC => Initialize the state variables attribute.
-        self._page = page
+        self.page = page
         self._icon = icon
         self._title = title
         self._desc = desc
         self._bgcolor_header = bgcolor_title
         self._bgcolor_content = bgcolor_desc
-        self._shadow = shadow
+        # self._shadow = shadow
         self._no_live_time = no_live_time
         self._position = position
+        self._position_spacing = position_spacing if position_spacing is not None else 0
         self._actions = actions
         self._actions_alignment = actions_alignment
         self._auto_close = auto_close
         self._width = width
         self._trigger = trigger
+
+        self._animate_duration = animate_duration
+        self._animate_curve = animate_curve
 
         self._set_history_title = set_history_title
         self._set_history_desc = set_history_desc
@@ -654,8 +697,9 @@ class ToastsFlexible:
         self._interval_random = interval_random
         self._refresh_runs = refresh_runs
 
+        self.animation = ft.Animation(self._animate_duration if self._animate_duration is not None else 1, self._animate_curve)
         self.gen_id = GenerateID()
-        self.overlay_manger = OverlayPageManger(page=self._page)
+        self.overlay_manger = OverlayPageManger(page=self.page)
         self.stacks_toast_key = self.gen_id.generate_md5_id(f"ToastsFlexible_stacks_{self.position_current(self._position)}")
 
         # DESC => Release toast to page.
@@ -667,26 +711,28 @@ class ToastsFlexible:
             self.open_toast()
 
     def position_current(self, pos):
-        if pos == ToastPosition.TOP_LEFT:
-            return ToastPosition.TOP_LEFT
-        elif pos == ToastPosition.TOP_RIGHT:
-            return ToastPosition.TOP_RIGHT
-        elif pos == ToastPosition.TOP_CENTER:
-            return ToastPosition.TOP_CENTER
-        elif pos == ToastPosition.BOTTOM_LEFT:
-            return ToastPosition.BOTTOM_LEFT
-        elif pos == ToastPosition.BOTTOM_RIGHT:
-            return ToastPosition.BOTTOM_RIGHT
-        elif pos == ToastPosition.BOTTOM_CENTER:
-            return ToastPosition.BOTTOM_CENTER
-        elif pos == ToastPosition.CENTER:
-            return ToastPosition.CENTER
-        elif pos == ToastPosition.CENTER_LEFT:
-            return ToastPosition.CENTER_LEFT
-        elif pos == ToastPosition.CENTER_RIGHT:
-            return ToastPosition.CENTER_RIGHT
+        if pos == Position.TOP_LEFT:
+            return Position.TOP_LEFT
+        elif pos == Position.TOP_RIGHT:
+            return Position.TOP_RIGHT
+        elif pos == Position.TOP_CENTER:
+            return Position.TOP_CENTER
+        elif pos == Position.BOTTOM_LEFT:
+            return Position.BOTTOM_LEFT
+        elif pos == Position.BOTTOM_RIGHT:
+            return Position.BOTTOM_RIGHT
+        elif pos == Position.BOTTOM_CENTER:
+            return Position.BOTTOM_CENTER
+        elif pos == Position.CENTER:
+            return Position.CENTER
+        elif pos == Position.CENTER_LEFT:
+            return Position.CENTER_LEFT
+        elif pos == Position.CENTER_RIGHT:
+            return Position.CENTER_RIGHT
+        elif pos == Position.NONE:
+            return Position.NONE
         else:
-            return ToastPosition.TOP_LEFT
+            return Position.TOP_LEFT
 
     def set_history_toast(self):
         # DESC => Get current time info.
@@ -728,13 +774,16 @@ class ToastsFlexible:
             attr_value_match=self.stacks_toast_key
         )[0]
         
-        for control in control_stacks_toasts.controls[:]:
-            # DESC => Check current control.
-            if control == self.control_toast:
-                # DESC => Remove control in control_stacks_toasts.
-                control.opacity = 0
-                control_stacks_toasts.controls.remove(control)
-                control_stacks_toasts.update()
+        # DESC => Check current control.
+        if self.control_toast in control_stacks_toasts.controls:
+            # DESC => Opration of control in control_toast.
+            self.control_toast.content.opacity = 0
+            self.control_toast.update()
+            
+            # DESC => wait and remover its control.
+            time.sleep(int(self._animate_duration if self._animate_duration is not None else 1) /1000 /2)
+            control_stacks_toasts.controls.remove(self.control_toast)
+            control_stacks_toasts.update()
 
     def on_auto_disapper_toast(self):
         def update_progress(control: Control, time_second: Union[int, float], start_progress_value: Union[int, float] = 0.0):
@@ -757,14 +806,17 @@ class ToastsFlexible:
             attr_value_match=self.stacks_toast_key
         )[0]
         
-        for control in control_stacks_toasts.controls[:]:
-            # DESC => Check current control.
-            if control == self.control_toast:
-                if update_progress(control=control.content.controls[2], time_second=self._auto_close):
-                    # DESC => Remove control in control_stacks_toasts.
-                    control.opacity = 0
-                    control_stacks_toasts.controls.remove(control)
-                    control_stacks_toasts.update()
+        # DESC => Check current control.
+        if self.control_toast in control_stacks_toasts.controls:
+            if update_progress(control=self.control_toast.content.controls[2], time_second=self._auto_close):
+                # DESC => Opration of control in control_toast.
+                self.control_toast.content.opacity = 0
+                self.control_toast.update()
+                
+                # DESC => wait and remover its control.
+                time.sleep(int(self._animate_duration if self._animate_duration is not None else 1) /1000 /2)
+                control_stacks_toasts.controls.remove(self.control_toast)
+                control_stacks_toasts.update()
 
     def open_toast(self):
         """Append control's UI in overlay to page."""
@@ -812,42 +864,46 @@ class ToastsFlexible:
                     time.sleep(_interval_update)
 
         def set_stacks_toasts(toast_positions: str):
-            if toast_positions == ToastPosition.TOP_LEFT: 
+            if toast_positions == Position.TOP_LEFT: 
                 position = SetPosition.top_left
                 vertical_alignment = ft.MainAxisAlignment.START
                 horizontal_alignment = ft.CrossAxisAlignment.START
-            elif toast_positions == ToastPosition.TOP_RIGHT:
+            elif toast_positions == Position.TOP_RIGHT:
                 position = SetPosition.top_right
                 vertical_alignment = ft.MainAxisAlignment.START
                 horizontal_alignment = ft.CrossAxisAlignment.END
-            elif toast_positions == ToastPosition.TOP_CENTER:
+            elif toast_positions == Position.TOP_CENTER:
                 position = SetPosition.top_center
                 vertical_alignment = ft.MainAxisAlignment.START
                 horizontal_alignment = ft.CrossAxisAlignment.CENTER
-            elif toast_positions == ToastPosition.BOTTOM_LEFT:
+            elif toast_positions == Position.BOTTOM_LEFT:
                 position = SetPosition.bottom_left
                 vertical_alignment = ft.MainAxisAlignment.END
                 horizontal_alignment = ft.CrossAxisAlignment.START
-            elif toast_positions == ToastPosition.BOTTOM_RIGHT:
+            elif toast_positions == Position.BOTTOM_RIGHT:
                 position = SetPosition.bottom_right
                 vertical_alignment = ft.MainAxisAlignment.END
                 horizontal_alignment = ft.CrossAxisAlignment.END
-            elif toast_positions == ToastPosition.BOTTOM_CENTER:
+            elif toast_positions == Position.BOTTOM_CENTER:
                 position = SetPosition.bottom_center
                 vertical_alignment = ft.MainAxisAlignment.END
                 horizontal_alignment = ft.CrossAxisAlignment.CENTER
-            elif toast_positions == ToastPosition.CENTER:
+            elif toast_positions == Position.CENTER:
                 position = SetPosition.center
                 vertical_alignment = ft.MainAxisAlignment.START
                 horizontal_alignment = ft.CrossAxisAlignment.CENTER
-            elif toast_positions == ToastPosition.CENTER_LEFT:
+            elif toast_positions == Position.CENTER_LEFT:
                 position = SetPosition.center_left
                 vertical_alignment = ft.MainAxisAlignment.START
                 horizontal_alignment = ft.CrossAxisAlignment.START
-            elif toast_positions == ToastPosition.CENTER_RIGHT:
+            elif toast_positions == Position.CENTER_RIGHT:
                 position = SetPosition.center_right
                 vertical_alignment = ft.MainAxisAlignment.START
                 horizontal_alignment = ft.CrossAxisAlignment.END
+            elif toast_positions == Position.NONE:
+                position = SetPosition.none
+                vertical_alignment = ft.MainAxisAlignment.START
+                horizontal_alignment = ft.CrossAxisAlignment.START
             else:
                 # DESC => default top_left.
                 position = SetPosition.top_left
@@ -856,14 +912,13 @@ class ToastsFlexible:
 
             stacks_toast_control = ft.Column(
                 key=self.stacks_toast_key,
-                top=position[0]+40 if isinstance(position[0], (int, float)) else position[0],
-                left=position[1]+40 if isinstance(position[1], (int, float)) else position[1],
-                right=position[2]+40 if isinstance(position[2], (int, float)) else position[2],
-                bottom=position[3]+40 if isinstance(position[3], (int, float)) else position[3],
+                top=position[0]+self._position_spacing if isinstance(position[0], (int, float)) else position[0],
+                left=position[1]+self._position_spacing if isinstance(position[1], (int, float)) else position[1],
+                right=position[2]+self._position_spacing if isinstance(position[2], (int, float)) else position[2],
+                bottom=position[3]+self._position_spacing if isinstance(position[3], (int, float)) else position[3],
                 alignment=vertical_alignment,
                 horizontal_alignment=horizontal_alignment,
                 spacing=5,
-                expand=None
             )
 
             return stacks_toast_control
@@ -911,23 +966,24 @@ class ToastsFlexible:
             self._bgcolor_header and self._title) else self._bgcolor_content if (
             self._bgcolor_content and self._desc) else ft.colors.SURFACE_VARIANT # DESC => Set default ft.colors.SURFACE_VARIANT
 
-        self._icon = self._icon if self._icon else None # DESC => Set default ft.icons.INFO.
-        self._width = self._width if self._width else 350 # DESC => Set default 350.
+        # self._icon = self._icon if self._icon else None # DESC => Set default ft.icons.INFO.
+        # self._width = self._width if self._width else 350 # DESC => Set default 350.
         self._bgcolor_header = self._bgcolor_header if self._bgcolor_header else ft.colors.INVERSE_SURFACE # DESC => Set default ft.colors.INVERSE_SURFACE
         self._bgcolor_content = self._bgcolor_content if self._bgcolor_content else ft.colors.ON_INVERSE_SURFACE # DESC => Set default ft.colors.ON_INVERSE_SURFACE
 
         # DESC => Control of toast container.
         self.control_toast = ft.Container(
             width=self._width,
-            # border=ft.border.all(width=0.4, color=ft.colors.with_opacity(opacity=0.25, color=ft.colors.INVERSE_SURFACE)),
+            border=ft.border.all(width=0.4, color=ft.colors.with_opacity(opacity=0.35, color=ft.colors.INVERSE_SURFACE)),
             border_radius=ft.border_radius.all(value=7),
-            shadow=self._shadow if self._shadow else ft.BoxShadow(spread_radius=0.01, blur_radius=0.3, color=ft.colors.with_opacity(0.25, ft.colors.SHADOW), offset=ft.transform.Offset(x=0, y=1)),
-            opacity=1,
-            animate_opacity=ft.Animation(duration=500, curve=ft.AnimationCurve.DECELERATE),
+            # shadow=self._shadow if self._shadow else ft.BoxShadow(spread_radius=0.01, blur_radius=0.3, color=ft.colors.with_opacity(0.25, ft.colors.SHADOW), offset=ft.transform.Offset(x=0, y=1)),
+            animate_opacity=self.animation,
+            animate_size=self.animation,
             content=ft.Column(
                 alignment=ft.MainAxisAlignment.START,
                 horizontal_alignment=ft.CrossAxisAlignment.START,
                 spacing=0,
+                animate_opacity=self.animation,
                 controls=[
                     # DESC => Control of toast header.
                     ft.Container(
@@ -950,7 +1006,7 @@ class ToastsFlexible:
                                             name=self._icon,
                                             size=20,
                                             color=set_color_balance(bgcolor=self._bgcolor_header),
-                                        ) if self._icon else ft.VerticalDivider(width=0, color=ft.colors.TRANSPARENT), 
+                                        ) if isinstance(self._icon, str) else self._icon if isinstance(self._icon, Control) else ft.VerticalDivider(width=0, thickness=0, color=ft.colors.TRANSPARENT), 
 
                                         ft.Text(
                                             expand=True,
@@ -959,7 +1015,7 @@ class ToastsFlexible:
                                             color=set_color_balance(bgcolor=self._bgcolor_header),
                                             style=ft.TextThemeStyle.BODY_MEDIUM,
                                             overflow=ft.TextOverflow.ELLIPSIS
-                                        ) if self._title else ft.VerticalDivider(width=0, color=ft.colors.TRANSPARENT), 
+                                        ) if isinstance(self._title, str) else self._title if isinstance(self._title, Control) else ft.VerticalDivider(width=0, thickness=0, color=ft.colors.TRANSPARENT), 
                                     ]
                                 ),
                                 
@@ -976,7 +1032,7 @@ class ToastsFlexible:
                                             style=ft.TextThemeStyle.BODY_SMALL,
                                             opacity=0.7,
                                             color=set_color_balance(bgcolor=self._bgcolor_header),
-                                        ) if self._no_live_time is False else ft.VerticalDivider(width=1, color=ft.colors.TRANSPARENT),
+                                        ) if self._no_live_time is False else ft.VerticalDivider(width=1, thickness=0, color=ft.colors.TRANSPARENT),
 
                                         # DESC => Control of toast header actions.
                                         ft.Row(
@@ -984,7 +1040,7 @@ class ToastsFlexible:
                                             vertical_alignment=ft.CrossAxisAlignment.CENTER,
                                             spacing=5,
                                             controls=self._actions
-                                        ) if self._actions and self._desc is None else ft.VerticalDivider(width=0, color=ft.colors.TRANSPARENT),
+                                        ) if self._actions and self._desc is None else ft.VerticalDivider(width=0, thickness=0, color=ft.colors.TRANSPARENT),
                                         
                                         # DESC => Control of toast header button close.
                                         ButtonIcon(
@@ -993,7 +1049,7 @@ class ToastsFlexible:
                                             no_hover=True,
                                             on_click=lambda e: self.on_close_toast_event(e),
                                             color=set_color_balance(bgcolor=self._bgcolor_header),
-                                        ) if self._auto_close is None else ft.VerticalDivider(width=0, color=ft.colors.TRANSPARENT),
+                                        ) if self._auto_close is None else ft.VerticalDivider(width=0, thickness=0, color=ft.colors.TRANSPARENT),
                                     ]
                                 ),
                             ]
@@ -1021,7 +1077,7 @@ class ToastsFlexible:
                                             weight=ft.FontWeight.W_200,
                                             style=ft.TextThemeStyle.BODY_MEDIUM,
                                             color=set_color_balance(bgcolor=self._bgcolor_content)
-                                        ) if isinstance(self._desc, str) else self._desc,
+                                        ) if isinstance(self._desc, str) else self._desc if isinstance(self._desc, Control) else ft.VerticalDivider(width=0, thickness=0, color=ft.colors.TRANSPARENT),
                                         
                                         # DESC => Control of toast content button close.
                                         ButtonIcon(
@@ -1030,7 +1086,7 @@ class ToastsFlexible:
                                             no_hover=True,
                                             on_click=lambda e: self.on_close_toast_event(e),
                                             color=set_color_balance(bgcolor=self._bgcolor_content),
-                                        ) if (self._title or self._auto_close) is None else ft.VerticalDivider(width=0, color=ft.colors.TRANSPARENT),
+                                        ) if (self._title or self._auto_close) is None else ft.VerticalDivider(width=0, thickness=0, color=ft.colors.TRANSPARENT),
                                     ]
                                 ),
                                 
@@ -1040,10 +1096,10 @@ class ToastsFlexible:
                                     vertical_alignment=ft.CrossAxisAlignment.CENTER,
                                     spacing=10,
                                     controls=self._actions
-                                ) if self._actions else ft.Divider(height=0, color=ft.colors.TRANSPARENT),
+                                ) if self._actions else ft.Divider(height=0, thickness=0, color=ft.colors.TRANSPARENT),
                             ]
                         ),
-                    ) if self._desc else ft.Divider(height=0, color=ft.colors.TRANSPARENT),
+                    ) if self._desc else ft.Divider(height=0, thickness=0, color=ft.colors.TRANSPARENT),
 
                     # DESC => Control of toast animation timer.
                     ft.ProgressBar(

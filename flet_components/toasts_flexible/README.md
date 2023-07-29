@@ -406,19 +406,21 @@ ft.app(target=main)
 
 ## Properties ToastsFlexible
 - `page` *(Page)*: The session start of the page container where the toast will be displayed. a for controls (widgets). It represents the user interface page where the toast will be shown.
-- `icon` *(ft.icons, Optional)*: The icon to be displayed on the toast. It is an optional argument that allows users to customize the icon shown with the toast message. Defaults to None.
-- `title` *(Union[str, Control], optional)*: The title of the toast message. It can be either a string or a Control object. If a Control object is used, the toast's title will be dynamic and update as per the control's value Defaults to None.
+- `icon` *(Union[str, Control], optional)*: The a icon to be displayed or a control custom that will, you can set string it icon or use a named from `flet.icons`. Defaults to None.
+- `title` *(Union[str, Control], optional)*: The a text to be displayed or a control custom that will. Defaults to None.
 - `desc` *(Union[str, Control], optional)*: The description or main content of the toast message. It can be either a string or a Control object, enabling dynamic content display. Defaults to None.
-- `bgcolor_title` *(ft.colors, optional)*: The background color of the toast title. This argument allows to customize the background color of the toast title section. Defaults to ft.colors.INVERSE_SURFACE.
-- `bgcolor_desc` *(ft.colors, optional)*: The background color of the toast description. This argument allows to customize the background color of the toast description section. Defaults to ft.colors.ON_INVERSE_SURFACE.
-- `shadow` *(Union[BoxShadow, List[BoxShadow]], optional)*: The shadow customization for the toast. can set the shadow properties, to add a shadow effect to the toast. Defaults to None.
+- `bgcolor_title` *(str, optional)*: The background color of the toast title. This allows to customize the background color of the toast title section a color value could be a hex (e.g. #CC0000) or a named color from `flet.colors`. Defaults to ft.colors.INVERSE_SURFACE.
+- `bgcolor_desc` *(str, optional)*: The background color of the toast description. This allows to customize the background color of the toast description section a color value could be a hex (e.g. #CC0000) or a named color from `flet.colors`. Defaults to ft.colors.ON_INVERSE_SURFACE.
 - `no_live_time` *(bool)*: That determines whether to show live time text to the toast. If set to True, the toast will not display any time information. Defaults to False.
-- `position` *(ToastPosition, optional)*: The position of the toast on the screen. It is an optional argument that allows to set the toast's position to one of the predefined positions, such as top-left etc. Defaults to ToastPosition.TOP_RIGHT.
-- `actions` *(List[ToastAction], optional)*: A list of action buttons to be added to the toast. can provide a list of `ToastAction` objects to create interactive buttons within the toast. Defaults to None.
+- `position` *(Position, optional)*: The position of the toast on the screen. that allows to set the toast's position to one of the predefined positions, can set the properties in `Position`. Defaults to Position.TOP_LEFT.
+- `position_spacing` *(int, optional)*: The spacing of the toast and page margin. Defaults to 40.
+- `actions` *(Union[List[ToastAction], List[Control]], optional)*: A list of action buttons to be added to the toast. can provide a list of `ToastAction` objects or a control custom that to create interactive buttons within the toast. Defaults to None.
 - `actions_alignment` *(MainAxisAlignment, optional)*: The alignment of the action buttons within the toast. It is an optional argument that allows to set the alignment of the buttons, such as start, end, or center.
 - `auto_close` *(Union[int, float], optional)*: The time duration (in seconds) after which the toast will automatically close and disappear. If set to None, the toast will not auto-close. Defaults to None.
 - `width` *(Union[int, float], optional)*: The width of the toast in pixels. If not provided. Defaults to 350.
 - `trigger` *(Control, optional)*: An optional control that can be used to trigger the display of the toast. If a control with an `on_click` attribute is provided, the toast will be shown when the control is clicked. Defaults to None.
+- `animate_duration` *(int, optional)*: The duration of animation in milliseconds to close toast. Defaults to 800.
+- `animate_curve` *(AnimationCurve, optional)*: The curve of animation to close toast. Defaults to AnimationCurve.DECELERATE.
 - `set_history_title` *(str, optional)*: An optional title to set for the toast's history entry. This argument is used if use a control in `"title"`, or want to set a specific title for the history entry. Defaults to None.
 - `set_history_desc` *(str, optional)*: An optional description to set for the toast's history entry. This argument is used if use a control in `"desc"`, or want to set a specific description for the history entry. Defaults to None.
 - `set_history` *(Dict, optional)*: A dictionary to store the history of displayed toasts. If provided, the dictionary will be updated with the timestamp, title, description, and time ago when each toast is displayed. Defaults to None.
@@ -427,22 +429,42 @@ ft.app(target=main)
 - `refresh_runs` *(Union[int, float], optional)*: The time interval (in seconds) for an refresh loop run. If provided, the opening time will be refreshed continuously at the specified interval until the toast is closed or auto-closes, if use None or set param `auto_close` or set `no_live_time` True you will not update. Defaults to None.
 
 ## Properties ToastAction
-- `key` *(Any, optional)*: An optional key to uniquely identify the control. It can be used for custom indexing or identification purposes. Defaults to None.
+- `key` *(str, optional)*: An optional key to uniquely identify the control. It can be used for custom indexing or identification purposes. Defaults to None.
 - `data` *(Any, optional)*: An optional data value associated with the control. This data can be used to store additional information related to the control. Defaults to None.
+- `width` *(Union[int, float], optional)*: Imposed Control width in virtual pixels. Defaults to None.
+- `height` *(Union[int, float], optional)*: Imposed Control height in virtual pixels. Defaults to None.
+- `left` *(Union[int, float], optional)*: Effective inside Stack only. The distance that the child's left edge is inset from the left of the stack. Defaults to None.
+- `top` *(Union[int, float], optional)*: Effective inside Stack only. The distance that the child's top edge is inset from the top of the stack. Defaults to None.
+- `right` *(Union[int, float], optional)*: Effective inside Stack only. The distance that the child's right edge is inset from the right of the stack. Defaults to None.
+- `bottom` *(Union[int, float], optional)*: Effective inside Stack only. The distance that the child's bottom edge is inset from the bottom of the stack. Defaults to None.
+- `expand` *(Union[bool, int], optional)*: When a child Control is placed into a Column or Row you can "expand" it to fill the available space. expand property could be a boolean value (True - expand control to fill all available space) or an integer - an "expand factor" specifying how to divide a free space. Defaults to None.
+- `col` *(Union[Dict[str, Union[int, float]], int, float], optional)*: Can be configured to have a different value for specific "breakpoints". Breakpoints are named dimension ranges. Defaults to None.
+- `opacity` *(Union[int, float], optional)*: The opacity of the control transparent. 0.0 - is completely transparent. 1.0 a is fully painted without any transparency. Defaults to None.
+- `rotate` *(Union[int, float, Rotate], optional)*: The rotation of the control a around the center. can set the properties in Rotate. Defaults to None.
+- `scale` *(Union[int, float, Scale], optional)*: The Scale of the control along the 2D plane. Default scale is 1.0 - is not scaled. 0.5 - the is twice smaller, 2.0 - the is twice larger. Defaults to None.
+- `offset` *(Union[Offset, Tuple[Union[float, int], Union[float, int]]], optional)*: The transform offset of the control. can set the properties in Offset. Defaults to None.
+- `aspect_ratio` *(Union[int, float], optional)*: The ratio size of the control. Defaults to None.
+- `visible` *(bool, optional)*: Setting visible to False completely prevents control (and all its children if any) to displayed. and they do not emit any events. Defaults to None.
+- `disabled` *(bool, optional)*: A boolean flag that determines whether the control is disabled. If set to True, the control will be non-interactive. Defaults to None.
+- `animate_opacity` *(Union[bool, int, Animation], optional)*: The Enables animation of the control. after that gradually changes its values can set the properties in Animation. Defaults to None.
+- `animate_size` *(Union[bool, int, Animation], optional)*: The Enables animation of the control. after that gradually changes its values can set the properties in Animation. Defaults to None.
+- `animate_position` *(Union[bool, int, Animation], optional)*: The Enables animation of the control. after that gradually changes its values can set the properties in Animation. Defaults to None.
+- `animate_rotation` *(Union[bool, int, Animation], optional)*: The Enables animation of the control. after that gradually changes its values can set the properties in Animation. Defaults to None.
+- `animate_scale` *(Union[bool, int, Animation], optional)*: The Enables animation of the control. after that gradually changes its values can set the properties in Animation. Defaults to None.
+- `animate_offset` *(Union[bool, int, Animation], optional)*: The Enables animation of the control. after that gradually changes its values can set the properties in Animation. Defaults to None.
+- `on_animation_end` *(Any, optional)*: A callback function that have which is called when animation complete. Defaults to None.
+-----
 - `text` *(str, optional)*: The text or label to be displayed on the control. It represents the visible text on the button. Defaults to None.
-- `width` *(Union[int, float], optional)*: The width of the control in pixels. If not provided, the width will be automatically determined based on the content. Defaults to None.
-- `height` *(Union[int, float], optional)*: The height of the control in pixels. If not provided. Defaults to 28.
+- `action_style` *(str, optional)*: The style of the button. It can be one of four options: `"elevated"`, `"filled"`, `"outlined"`, or `"texted"`. Defaults to "texted".
+- `color` *(Union[None, str, Dict[Union[str, MaterialState], str]])*: The text color of the control. It can be specified as a color string or a dictionary containing mappings for different states `{"": "red", "hovered": "blue", ft.MaterialState.FOCUSED: ft.colors.WHITE}`. Defaults to None.
+- `bgcolor` *(Union[None, str, Dict[Union[str, MaterialState], str]])*: The background color of the control. It can be specified as a color string or a dictionary containing mappings for different states `{"": "red", "hovered": "blue", ft.MaterialState.FOCUSED: ft.colors.WHITE}`. Defaults to None.
 - `url` *(str, optional)*: An optional URL to be opened when the control is clicked. If set, on_click event is fired after that. Defaults to None.
 - `url_target` *(str, optional)*: An optional target attribute for the URL specified in url. It determines where the URL will be opened, such as "_blank" for a new tab or "_self" for the current tab. Defaults to None.
 - `on_hover` *(Callable[[ControlEvent], None], optional)*: A callback function that will be triggered when the mouse pointer hovers over the control. Defaults to None.
 - `on_click` *(Callable[[ControlEvent], None], optional)*: A callback function that will be triggered when the control is clicked. Defaults to None.
 - `on_long_press` *(Callable[[ControlEvent], None], optional)*: A callback function that will be triggered when the control is long-pressed. Defaults to None.
-- `disabled` *(bool, optional)*: A boolean flag that determines whether the control is disabled. If set to True, the control will be non-interactive. Defaults to None.
-- `color` *(Union[None, str, Dict[Union[str, MaterialState], str]])*: The text color of the control. It can be specified as a color string or a dictionary containing mappings for different states `{"": "red", "hovered": "blue", ft.MaterialState.FOCUSED: ft.colors.WHITE}`. Defaults to None.
-- `bgcolor` *(Union[None, str, Dict[Union[str, MaterialState], str]])*: The background color of the control. It can be specified as a color string or a dictionary containing mappings for different states `{"": "red", "hovered": "blue", ft.MaterialState.FOCUSED: ft.colors.WHITE}`. Defaults to None.
-- `action_style` *(str, optional)*: The style of the button. It can be one of four options: `"elevated"`, `"filled"`, `"outlined"`, or `"texted"`. Defaults to "texted".
 
-## Properties ToastPosition
+## Properties Position
 Property value is ToastPosition enum with the following values:
 
 - `TOP_CENTER`

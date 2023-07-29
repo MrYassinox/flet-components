@@ -1,5 +1,6 @@
 import flet as ft
-from flet_components.toasts_flexible import ToastAction, ToastPosition, ToastsFlexible
+from flet_components.toasts_flexible import ToastAction, ToastsFlexible
+from flet_components.core import Position
 
 # DESC => Set dictionary empty to history of toasts.
 toasts_history = {}
@@ -14,7 +15,7 @@ def main(page: ft.Page):
             interval_random=False,
             interval_update=1,
             refresh_runs=10,
-            position=ToastPosition.TOP_LEFT,
+            position=Position.TOP_LEFT,
             set_history_desc=".....",
             set_history=toasts_history,
         )

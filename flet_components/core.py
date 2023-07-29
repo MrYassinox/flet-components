@@ -89,8 +89,36 @@ def set_color_balance(bgcolor: str):
     elif bgcolor == ft.colors.ON_ERROR_CONTAINER:
         color = ft.colors.ERROR_CONTAINER
     else:
-        color = ft.colors.SURFACE
+        color = ft.colors.ON_SURFACE
     return color
+
+class Position:
+    """The position attribute.
+
+    Attribute:
+        `TOP_CENTER`
+        `TOP_LEFT`
+        `TOP_RIGHT`
+        `BOTTOM_CENTER`
+        `BOTTOM_LEFT`
+        `BOTTOM_RIGHT`
+        `CENTER`
+        `CENTER_LEFT`
+        `CENTER_RIGHT`
+    """
+    TOP_CENTER = "top_center"
+    TOP_LEFT = "top_left"
+    TOP_RIGHT = "top_right"
+
+    BOTTOM_CENTER = "bottom_center"
+    BOTTOM_LEFT = "bottom_left"
+    BOTTOM_RIGHT = "bottom_right"
+
+    CENTER = "center"
+    CENTER_LEFT = "center_left"
+    CENTER_RIGHT = "center_right"
+
+    NONE = "none"
 
 class SetPosition:
     """The set position attribute.
@@ -150,6 +178,9 @@ class SetPosition:
     """Returns: top, left, right, bottom."""
 
     center_right    = _set_position(top=0, left=None, right=0, bottom=0)
+    """Returns: top, left, right, bottom."""
+
+    none            = _set_position(top=None, left=None, right=None, bottom=None)
     """Returns: top, left, right, bottom."""
 
 class OverlayPageManger:
